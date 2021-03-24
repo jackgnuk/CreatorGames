@@ -3,43 +3,71 @@ package jackgnuk.creatorgames;
 import me.wazup.partygames.PartyGames;
 import me.wazup.partygames.PartyGamesAPI;
 import me.wazup.partygames.PlayerData;
-import net.minecraft.server.v1_16_R3.ItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
-public class main extends JavaPlugin {
+public final class main extends JavaPlugin {
+    private FileConfiguration customConfig;
+
+    public main(FileConfiguration customConfig) {
+        this.customConfig = customConfig;
+    }
+
+    public FileConfiguration getCustomConfig() {
+        return this.customConfig;
+    }
+
+    private void createCustomConfig() {
+        File customConfigFile = new File(getDataFolder(), "custom.yml");
+        if (!customConfigFile.exists()) {
+            customConfigFile.getParentFile().mkdirs();
+            saveResource("custom.yml", false);
+        }
+        customConfig = new YamlConfiguration();
+        try {
+            customConfig.load(customConfigFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onEnable() {
+        getServer().getPluginManager().registerEvents(new listener(), this);
+        createCustomConfig();
+               //Fired when the server enables the plugin
+        }
+
+    @Override
+    public void onDisable() {
+        //Fired when the server stops and disables all plugins
+    }
+
+
+
+
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-
         PartyGamesAPI api = PartyGames.api;
         Player player = (Player) sender;
         Player p = Bukkit.getPlayer(player.getName());
         PlayerData data = api.getPlayerData(p);
-
         // If run /test or Alias /top to show leaderboard.
         if (cmd.getName().equalsIgnoreCase("test") && sender instanceof Player) {
             if (sender instanceof Player) {
                 //Player who issues Coins
                 Integer coins = data.getCoins(p);
-
                // Team One (Player A + Player B + Player C)
                Player a = Bukkit.getPlayer("Twitch_TV");
                Player b = Bukkit.getPlayer("Twitch_TV");
@@ -51,7 +79,6 @@ public class main extends JavaPlugin {
                Integer coinB = userb.getCoins(b);
                Integer coinC = userc.getCoins(c);
                Integer sumTEAMONE = coinA + coinB + coinC;
-
                 // Team Two (Player D + Player E + Player F)
                 Player d = Bukkit.getPlayer("Twitch_TV");
                 Player e = Bukkit.getPlayer("Twitch_TV");
@@ -63,7 +90,6 @@ public class main extends JavaPlugin {
                 Integer coinE = userb.getCoins(e);
                 Integer coinF = userc.getCoins(f);
                 Integer sumTEAMTWO = coinD + coinE + coinF;
-
                 // Team Three (Player g + Player h + Player i)
                 Player g = Bukkit.getPlayer("Twitch_TV");
                 Player h  = Bukkit.getPlayer("Twitch_TV");
@@ -75,7 +101,6 @@ public class main extends JavaPlugin {
                 Integer coinH = userb.getCoins(h);
                 Integer coinI = userc.getCoins(i);
                 Integer sumTEAMTHREE = coinG + coinH + coinI;
-
                 // Team Four (Player J + Player K + Player L)
                 Player j = Bukkit.getPlayer("Twitch_TV");
                 Player k  = Bukkit.getPlayer("Twitch_TV");
@@ -87,7 +112,6 @@ public class main extends JavaPlugin {
                 Integer coinK = userb.getCoins(k);
                 Integer coinL = userc.getCoins(l);
                 Integer sumTEAMFOUR = coinJ + coinK + coinL;
-
                 // Team Five (Player m + Player n + Player o)
                 Player m = Bukkit.getPlayer("Twitch_TV");
                 Player n  = Bukkit.getPlayer("Twitch_TV");
@@ -99,7 +123,6 @@ public class main extends JavaPlugin {
                 Integer coinN = userb.getCoins(n);
                 Integer coinO = userc.getCoins(o);
                 Integer sumTEAMFIVE = coinM + coinN + coinO;
-
                // Final Message Sent to user
                player.sendMessage(ChatColor.RED + "" + ChatColor.STRIKETHROUGH + "                  " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + " Creator Games " + ChatColor.RED + "" + ChatColor.STRIKETHROUGH + "                  ");
                player.sendMessage( "");
@@ -116,7 +139,6 @@ public class main extends JavaPlugin {
                player.sendMessage(ChatColor.DARK_GRAY + "Nimble Netherites" + ChatColor.YELLOW + " ⭐ " + sumTEAMFIVE);
                player.sendMessage( "");
                player.sendMessage(ChatColor.RED + "" + ChatColor.STRIKETHROUGH + "                                                               ");
-
             } else {
                sender.sendMessage("You must be a player!");
             }
@@ -124,39 +146,5 @@ public class main extends JavaPlugin {
             return true;
         }
         return false;
-    }
-
-    private File customConfigFile;
-    private FileConfiguration customConfig;
-
-
-    @Override
-    public void onEnable(){
-        //Fired when the server enables the plugin
-        getServer().getPluginManager().registerEvents(new listener(), this);
-        createCustomConfig();
-
-    }
-    @Override
-    public void onDisable(){
-        //Fired when the server stops and disables all plugins
-    }
-
-    public FileConfiguration getCustomConfig(){
-        return this.customConfig;
-    }
-
-    private void createCustomConfig() {
-        customConfigFile = new File(getDataFolder(), "custom.yml");
-        if (!customConfigFile.exists()) {
-            customConfigFile.getParentFile().mkdirs();
-            saveResource("custom.yml", false);
-        }
-        customConfig = new YamlConfiguration();
-        try {
-            customConfig.load(customConfigFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
     }
 }

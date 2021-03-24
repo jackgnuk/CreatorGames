@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="server" level="project" />
     <orderEntry type="library" exported="" name="PartyGames" level="project" />
+    <orderEntry type="library" name="spigot-api-1.16.5-R0.1-20210319.221438-35" level="project" />
   </component>
 </module>
