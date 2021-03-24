@@ -1,7 +1,7 @@
 # CreatorGames
 Dependency: PartyGames Plugin.
 
-#Commands:
+### Commands:
 
 /top
 
