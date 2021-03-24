@@ -3,8 +3,7 @@ Dependency: PartyGames Plugin.
 
 ### Commands:
 
-/top
-
+#### /top
 Use: Displays the leaderboard for every team within the event. Displaying team and Total points using API Hook to PartyGames. 
 
 Alias: /test, /t
