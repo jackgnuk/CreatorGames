@@ -1,0 +1,10 @@
+name: CreatorGames
+version: 0.1
+author: JackGNUK
+main: jackgnuk.creatorgames.main
+softdepend:
+  - PartyGames
+commands:
+  test:
+    aliases: top
+    description: display leaderboard from creatorgames
