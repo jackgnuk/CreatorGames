@@ -17,21 +17,18 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.io.File;
-import java.util.UUID;
-
 public class listener implements Listener {
-
-    // On PlayerJoin
+    // On PlayerJoin set Blank
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.setJoinMessage(ChatColor.GREEN + "+ " + ChatColor.GRAY + event.getPlayer().getName() + " Has Joined.");
+        event.setJoinMessage("");
     }
-    // On PlayerLeave
+    // On PlayerLeave set Blank
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
-        event.setQuitMessage(ChatColor.RED + "- " + ChatColor.GRAY + event.getPlayer().getName() + " Has Left.");
+        event.setQuitMessage("");
     }
+    //On Player kill Animal event, give Coin
     @EventHandler
     public void getCoin(EntityDeathEvent event) {
 
@@ -42,21 +39,18 @@ public class listener implements Listener {
         Player p = Bukkit.getPlayer(player.getName());
         PlayerData data = api.getPlayerData(p);
 
-
         if (entity.getType() == EntityType.BAT) {
             if (player != null) {
                 entity.getKiller().sendMessage(ChatColor.YELLOW + "+1  Point");
                 entity.getKiller().playSound(player.getLocation(), Sound.BLOCK_BELL_USE, 1F, 1F);
                 //Gives killer 10 Coins from the API of PartyGames
-                data.addCoins(p, 10);
+                data.addCoins(p, 1);
                 data.saveStats = true;
-
             } else {
                 return;
             }
         }
     }
-
 
 //    // On DeathEvent Handler
 //    @EventHandler
@@ -95,19 +89,4 @@ public class listener implements Listener {
             Bukkit.broadcastMessage(ChatColor.RED + "" + ChatColor.STRIKETHROUGH + "-------------------------------");
         }
     }
-
-   // @EventHandler
-   // public void onKill(EntityDeathEvent d) {
-   //     Player player = (Player) d.getEntity();
-
-   //     if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-   //         EntityDamageByEntityEvent nEvent = (EntityDamageByEntityEvent) d.getEntity().getLastDamageCause();
-
-   //         if ((nEvent.getDamager() instanceof Bat)) {
-                // this wont work atm
-   //         } else {
-   //             return;
-   //         }
-   //     }
-   // }
 }
