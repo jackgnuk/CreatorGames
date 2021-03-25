@@ -1,0 +1,11 @@
+name: CreatorGames
+version: ${project.version}
+main: jackgnuk.creatorgames.CreatorGames
+api-version: 1.16
+authors: [ JackGNUK, 007spy9 ]
+softdepend:
+  - PartyGames
+commands:
+  top:
+    aliases: test
+    description: display leaderboard from creatorgames
