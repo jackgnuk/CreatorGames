@@ -33,10 +33,11 @@ public class EntityEvents implements Listener {
             PlayerData playerData = api.getPlayerData(player);
 
             if (entity.getType() == EntityType.BAT) {
-                player.sendMessage(ChatColor.YELLOW + "+1 Point");
+                int coinsToDrop = instance.Config.CoinsToDrop(EntityType.BAT);
+                player.sendMessage(ChatColor.YELLOW + "+" + coinsToDrop + " Point");
                 player.playSound(player.getLocation(), Sound.BLOCK_BELL_USE, 1f, 1f);
 
-                playerData.addCoins(player, instance.Config.CoinsToDrop(EntityType.BAT));
+                playerData.addCoins(player, coinsToDrop);
                 playerData.saveStats = true;
             }
         }
