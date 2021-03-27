@@ -9,3 +9,7 @@ commands:
   top:
     aliases: test
     description: display leaderboard from creatorgames
+  addteammate:
+    description: Add a teammate to a specified team by ID. Team should be in config.yml
+  removeteammate:
+    description: Remove a teammate from a specified team by ID. Team should be in config.yml

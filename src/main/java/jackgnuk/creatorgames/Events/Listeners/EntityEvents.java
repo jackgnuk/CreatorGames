@@ -1,7 +1,6 @@
 package jackgnuk.creatorgames.Events.Listeners;
 
 import jackgnuk.creatorgames.CreatorGames;
-import jackgnuk.creatorgames.Util.PlayerWrapper;
 import me.wazup.partygames.PartyGames;
 import me.wazup.partygames.PartyGamesAPI;
 import me.wazup.partygames.PlayerData;
@@ -32,8 +31,9 @@ public class EntityEvents implements Listener {
         if (player != null) {
             PlayerData playerData = api.getPlayerData(player);
 
-            if (entity.getType() == EntityType.BAT) {
-                int coinsToDrop = instance.Config.CoinsToDrop(EntityType.BAT);
+            EntityType entityType = entity.getType();
+            if (instance.Config.coinAvailable(entityType)) {
+                int coinsToDrop = instance.Config.CoinsToDrop(entityType);
                 player.sendMessage(ChatColor.YELLOW + "+" + coinsToDrop + " Point");
                 player.playSound(player.getLocation(), Sound.BLOCK_BELL_USE, 1f, 1f);
 

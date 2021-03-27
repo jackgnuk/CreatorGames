@@ -25,13 +25,13 @@ public class PlayerEvents implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.setJoinMessage("");
-        //TODO handle getting player
+        instance.PlayerManager.GetPlayer(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         event.setQuitMessage("");
-        //TODO handle saving player
+        instance.PlayerManager.RemovePlayer(event.getPlayer().getUniqueId().toString());
     }
 
     @EventHandler(ignoreCancelled = true)
