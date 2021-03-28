@@ -44,7 +44,7 @@ public class CommandAddTeammate implements CommandExecutor {
             TeamRegister teamName = instance.Config.getTeamFromID(team);
 
             try {
-                conn.AddTeammate(s, teamName.TeamName);
+                conn.AddTeammate(s, teamName.ID);
                 sender.sendMessage(player + " has been added to " + teamName.TeamName);
             } catch (Exception e) {
                 e.printStackTrace();

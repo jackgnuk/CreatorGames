@@ -6,6 +6,7 @@ import jackgnuk.creatorgames.Data.DatabaseConnector;
 import jackgnuk.creatorgames.Data.StorageConnector;
 import jackgnuk.creatorgames.Model.PlayerStats;
 import jackgnuk.creatorgames.Model.PlayerWrapper;
+import jackgnuk.creatorgames.Scoreboard.Leaderboard;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -16,9 +17,22 @@ public class PlayerManager {
 
     public PlayerManager(CreatorGames instance) {
         this.instance = instance;
+        this.leaderboardHandler = new Leaderboard(instance);
+
+        leaderboardHandler.ScoreboardUpdater();
     }
 
     private final List<PlayerWrapper> players = new ArrayList<>();
+
+    private final Leaderboard leaderboardHandler;
+
+    public void OnJoin(Player player) {
+        leaderboardHandler.GiveScoreboard(player);
+    }
+
+    public List<PlayerWrapper> GetPlayers() {
+        return players;
+    }
 
     public PlayerWrapper GetPlayer(String id) {
         if (players.size() <= 0) return null;
@@ -37,7 +51,14 @@ public class PlayerManager {
     public PlayerWrapper GetPlayer(Player player) {
         String uuid = player.getUniqueId().toString();
         if (players.size() > 0) {
-            return GetPlayer(uuid);
+            for (PlayerWrapper playerWrapper : players) {
+                String tmpUUID = playerWrapper.player.getUniqueId().toString();
+                String tmpName = playerWrapper.player.getDisplayName();
+
+                if (tmpUUID.equals(uuid) || tmpName.equals(player.getName())) {
+                    return playerWrapper;
+                }
+            }
         }
 
         PlayerWrapper wrapper = new PlayerWrapper(player);

@@ -1,10 +1,10 @@
-package jackgnuk.creatorgames.Commands;
+package jackgnuk.creatorgames.Scoreboard;
 
+import io.puharesource.mc.titlemanager.api.v2.TitleManagerAPI;
 import jackgnuk.creatorgames.CreatorGames;
 import jackgnuk.creatorgames.Data.Connector;
-import jackgnuk.creatorgames.Data.DatabaseConnector;
-import jackgnuk.creatorgames.Data.StorageConnector;
 import jackgnuk.creatorgames.Model.PlayerStats;
+import jackgnuk.creatorgames.Model.PlayerWrapper;
 import jackgnuk.creatorgames.Model.TeamRegister;
 import jackgnuk.creatorgames.Util.Sorter;
 import me.wazup.partygames.Enums;
@@ -13,35 +13,51 @@ import me.wazup.partygames.PartyGamesAPI;
 import me.wazup.partygames.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommandTop implements CommandExecutor {
+public class Leaderboard {
     private final CreatorGames instance;
+
     private final int MAX_NAME_LENGTH = 20;
 
-    public CommandTop(CreatorGames instance) {
+    int cycle = 10;
+
+    public Leaderboard(CreatorGames instance) {
         this.instance = instance;
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void ScoreboardUpdater() {
+        BukkitTask counter = new BukkitRunnable() {
+            int count = 0;
+
+            @Override
+            public void run() {
+                count += 1;
+
+                if (count >= cycle) {
+                    for(PlayerWrapper pw : instance.PlayerManager.GetPlayers()) {
+                        GiveScoreboard(pw.player);
+                    }
+                    count = 0;
+                }
+            }
+        }.runTaskTimerAsynchronously(instance, 0, 20);
+    }
+
+    public void GiveScoreboard(Player player) {
+        TitleManagerAPI titleApi = instance.TitleManagerAPI;
         PartyGamesAPI api = PartyGames.api;
         int personalCoins = 0;
 
-        if (sender instanceof Player) {
-            PlayerData pd = api.getPlayerData((Player) sender);
-            personalCoins = pd.getCoins((Player) sender);
-        }
-
+        PlayerData pd = api.getPlayerData(player);
+        personalCoins = pd.getCoins(player);
 
         Connector conn = instance.Config.CreateConnector();
 
@@ -71,34 +87,39 @@ public class CommandTop implements CommandExecutor {
             teams.add(register);
         }
 
-        sender.sendMessage(ChatColor.RED + "" + ChatColor.STRIKETHROUGH + "                  " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + " Creator Games " + ChatColor.RED + "" + ChatColor.STRIKETHROUGH + "                  ");
-        sender.sendMessage( "");
 
-        int nameLen = "Personal".length();
-        int spaces = MAX_NAME_LENGTH - nameLen;
-
-        StringBuilder s;
+        titleApi.giveScoreboard(player);
+        titleApi.setScoreboardTitle(player, "汉");
 
         Map<String, Integer> m  = Sorter.sortByValue(coinsToTeam, false);
-        int count = 0;
+        int count = 1;
+        int teamCount = 0;
+
+        int nameLen = "LEADERBOARD".length();
+        int spaces = MAX_NAME_LENGTH - nameLen;
+        StringBuilder s = new StringBuilder();
+        s.append("LEADERBOARD");
+
+        titleApi.setScoreboardValue(player, count++, "");
+        titleApi.setScoreboardValue(player, count++, "" + ChatColor.GOLD + ChatColor.BOLD + s);
         for (Map.Entry<String, Integer> e : m.entrySet()) {
             TeamRegister r = teams.stream().filter(reg -> reg.ID.equals(e.getKey())).findFirst().orElse(null);
             assert r != null;
 
-            nameLen = r.TeamName.length();
-            spaces = MAX_NAME_LENGTH - nameLen;
-            if (spaces < 0) spaces = 0;
+            teamCount++;
+            if (teamCount <= 4) {
+                nameLen = r.TeamName.length();
+                spaces = MAX_NAME_LENGTH - nameLen;
+                if (spaces < 0) spaces = 0;
 
-            s = new StringBuilder(r.Color + r.TeamName);
-            //if (count % 2 == 0) s.append("明");
-            for (int i = 0; i < spaces; i++) s.append("ꈁ");
-            s.append(ChatColor.YELLOW + "ꈁ⭐ꈁ").append(String.format("%04d", coinsToTeam.getOrDefault(r.ID, 0)));
-
-            sender.sendMessage(s.toString());
+                s = new StringBuilder(" " + teamCount + ". " + r.Color + r.TeamName + " ");
+                for (int i = 0; i < spaces; i++) s.append("ꈁ");
+                s.append(ChatColor.YELLOW).append(String.format("%04d", coinsToTeam.getOrDefault(r.ID, 0))).append(" 沉");
+                titleApi.setScoreboardValue(player, count++, s.toString());
+            }
         }
 
-        sender.sendMessage("");
-        sender.sendMessage(ChatColor.RED + "" + ChatColor.STRIKETHROUGH + "                                                               ");
-        return true;
+        titleApi.setScoreboardValue(player, count++, "");
+        titleApi.setScoreboardValue(player, count, "ꈁꈁꈁꈁꈁꈁ明明书");
     }
 }

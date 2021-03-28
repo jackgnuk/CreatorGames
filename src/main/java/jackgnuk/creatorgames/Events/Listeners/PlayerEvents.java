@@ -26,6 +26,7 @@ public class PlayerEvents implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.setJoinMessage("");
         instance.PlayerManager.GetPlayer(event.getPlayer());
+        instance.PlayerManager.OnJoin(event.getPlayer());
     }
 
     @EventHandler

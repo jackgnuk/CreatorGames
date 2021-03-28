@@ -5,6 +5,7 @@ api-version: 1.16
 authors: [ JackGNUK, 007spy9 ]
 softdepend:
   - PartyGames
+  - TitleManager
 commands:
   top:
     aliases: test

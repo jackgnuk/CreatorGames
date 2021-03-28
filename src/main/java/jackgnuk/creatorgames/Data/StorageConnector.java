@@ -141,8 +141,8 @@ public class StorageConnector implements Connector {
     }
 
     @Override
-    public void AddTeammate(PlayerStats stats, String teamName) {
-        TeamRegister team = GetTeam(teamName);
+    public void AddTeammate(PlayerStats stats, String teamID) {
+        TeamRegister team = GetTeam(teamID);
 
         boolean existsAlready = false;
         for (PlayerStats ps : team.Players) {
@@ -163,7 +163,7 @@ public class StorageConnector implements Connector {
                 for (String t : teams) {
                     conf.createSection(t);
 
-                    if (t.equals(teamName)) conf.set(t + ".uuids", team.GetPlayerUUIDs());
+                    if (t.equals(team.TeamName)) conf.set(t + ".uuids", team.GetPlayerUUIDs());
                     else conf.set(t + ".uuids", new ArrayList<String>());
 
                 }
@@ -174,7 +174,7 @@ public class StorageConnector implements Connector {
             }
         } else {
             try {
-                conf.set(teamName + ".uuids", team.GetPlayerUUIDs());
+                conf.set(team.TeamName + ".uuids", team.GetPlayerUUIDs());
 
                 conf.save(f);
             } catch (Exception e) {
@@ -184,8 +184,8 @@ public class StorageConnector implements Connector {
     }
 
     @Override
-    public void RemoveTeammate(PlayerStats stats, String teamName) {
-        TeamRegister team = GetTeam(teamName);
+    public void RemoveTeammate(PlayerStats stats, String teamID) {
+        TeamRegister team = GetTeam(teamID);
 
         for (int i = 0; i < team.Players.size(); i++) {
             if (team.Players.get(i).UUID.equals(stats.UUID)) team.Players.remove(i);
@@ -202,7 +202,7 @@ public class StorageConnector implements Connector {
                 for (String t : teams) {
                     conf.createSection(t);
 
-                    if (t.equals(teamName)) conf.set(t + ".uuids", team.GetPlayerUUIDs());
+                    if (t.equals(team.TeamName)) conf.set(t + ".uuids", team.GetPlayerUUIDs());
                     else conf.set(t + ".uuids", new ArrayList<String>());
 
                 }
@@ -213,7 +213,7 @@ public class StorageConnector implements Connector {
             }
         } else {
             try {
-                conf.set(teamName + ".uuids", team.GetPlayerUUIDs());
+                conf.set(team.TeamName + ".uuids", team.GetPlayerUUIDs());
 
                 conf.save(f);
             } catch (Exception e) {

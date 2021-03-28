@@ -42,7 +42,7 @@ public class CommandRemoveTeammate implements CommandExecutor {
             TeamRegister teamName = instance.Config.getTeamFromID(team);
 
             try {
-                conn.RemoveTeammate(s, teamName.TeamName);
+                conn.RemoveTeammate(s, teamName.ID);
                 sender.sendMessage(player + " has been removed from " + teamName.TeamName);
             } catch (Exception e) {
                 e.printStackTrace();
