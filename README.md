@@ -1,5 +1,9 @@
 # CreatorGames
-Dependency: PartyGames Plugin.
+####Developed by: _007spy9 & JackGNUK_
+___Dependency__: PartyGames Plugin._
+
+###Important!
+You __MUST__ enable _use-UUID_ in the PartyGames configuration
 
 ### Commands:
 
@@ -8,12 +12,12 @@ Use: Displays the leaderboard for every team within the event. Displaying team a
 
 Alias: /test, /t
 
-## Known Issues
+#### /addteammate <teamID> <player>
+Use: Add a teammate to a specified team by ID. Team should be in config.yml
 
-/top only works when all players are online.
-Fix by taking the data from the file or SQL. Need to add the coins to SQL and inspect file sructure then create code.
+#### /removeteammate <teamID> <player>
+Use: Remove a teammate from a specified team by ID. Team should be in config.yml
 
-#### OnBatKillEvent
-When the game ends you can kill bats and gain points after the event.
+###Known Issues:
 
-If a bat is killed by a non-player issues a error.
+- Currently mobs can be killed even when not in a game to add coins
